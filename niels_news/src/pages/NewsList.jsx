@@ -1,43 +1,45 @@
-import { useState, useEffect } from 'react';
 import { useParams, useSearchParams } from 'react-router-dom';
 import NewsCard from '../components/NewsCard';
-import axios from 'axios';
+import NewsCardSkeleton from '../components/NewsCardSkeleton';
+import useNewsFetch from '../hooks/useNewsFetch';
 
 function NewsList() {
-  const { category } = useParams();
+  const { category: categoryParam } = useParams();
   const [searchParams] = useSearchParams();
   const query = searchParams.get('q');
-  const [articles, setArticles] = useState([]);
-  const [loading, setLoading] = useState(true);
+  
+  const category = categoryParam || (query ? null : 'general');
+  
+  const { articles, loading, error } = useNewsFetch(category, query);
 
-  useEffect(() => {
-    const fetchNews = async () => {
-      setLoading(true);
-      try {
-        const endpoint = query ? 'everything' : 'top-headlines';
-        const params = {
-          apiKey: import.meta.env.VITE_NEWS_API_KEY,
-          pageSize: 12,
-        };
-        if (query) params.q = query;
-        else if (category && category !== 'general') params.category = category;
-        else params.country = 'us';
-
-        const res = await axios.get(`${import.meta.env.VITE_NEWS_API_BASE_URL}/${endpoint}`, { params });
-        setArticles(res.data.articles);
-      } catch (err) {
-        console.error('Error fetching news:', err);
-      } finally {
-        setLoading(false);
-      }
-    };
-    fetchNews();
-  }, [category, query]);
+  const getTitle = () => {
+    if (query) return `Search: "${query}"`;
+    if (category && category !== 'general') return `${category.charAt(0).toUpperCase() + category.slice(1)} News`;
+    return 'Top Headlines';
+  };
 
   if (loading) {
     return (
       <div className="container mx-auto px-6 py-12">
-        <p className="text-center text-xl">Loading news...</p>
+        <h1 className="text-5xl md:text-6xl font-bold text-center mb-12">
+          {getTitle()}
+        </h1>
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+          {Array.from({ length: 9 }).map((_, i) => (
+            <NewsCardSkeleton key={i} />
+          ))}
+        </div>
+      </div>
+    );
+  }
+
+  if (error) {
+    return (
+      <div className="container mx-auto px-6 py-12">
+        <h1 className="text-5xl md:text-6xl font-bold text-center mb-12">
+          {getTitle()}
+        </h1>
+        <p className="text-center text-xl text-red-500">{error}</p>
       </div>
     );
   }
@@ -49,11 +51,16 @@ function NewsList() {
 
       <div className="container mx-auto px-6 py-12">
         <h1 className="text-5xl md:text-6xl font-bold text-center mb-12">
-          {query ? `Search: "${query}"` : category ? `${category.charAt(0).toUpperCase() + category.slice(1)} News` : 'Top Headlines'}
+          {getTitle()}
         </h1>
+        
+        {articles.length === 0 && !loading && (
+          <p className="text-center text-xl">No articles found matching your criteria.</p>
+        )}
+        
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
           {articles.map((article, i) => (
-            <div key={i} className={i === 1 ? 'md:col-span-2' : ''}>
+            <div key={article.url || i}>
               <NewsCard article={article} />
             </div>
           ))}
