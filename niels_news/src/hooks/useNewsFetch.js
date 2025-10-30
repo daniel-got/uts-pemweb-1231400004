@@ -1,48 +1,85 @@
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useCallback } from 'react';
 import axios from 'axios';
 
 const VITE_NEWS_API_KEY = import.meta.env.VITE_NEWS_API_KEY;
 const VITE_NEWS_API_BASE_URL = import.meta.env.VITE_NEWS_API_BASE_URL;
+const PAGE_SIZE = 12;
 
 function useNewsFetch(category, query) {
   const [articles, setArticles] = useState([]);
-  const [loading, setLoading] = useState(true);
+  const [page, setPage] = useState(1);
+  const [totalResults, setTotalResults] = useState(0);
+  const [initialLoading, setInitialLoading] = useState(true);
+  const [moreLoading, setMoreLoading] = useState(false);
   const [error, setError] = useState(null);
 
-  useEffect(() => {
-    const fetchNews = async () => {
-      setLoading(true);
-      setError(null);
-      
-      try {
-        const endpoint = query ? 'everything' : 'top-headlines';
-        const params = {
-          apiKey: VITE_NEWS_API_KEY,
-          pageSize: 12,
-        };
+  const fetchNews = useCallback(async (pageNum) => {
+    const isLoadingMore = pageNum > 1;
+    if (isLoadingMore) {
+      setMoreLoading(true);
+    } else {
+      setInitialLoading(true);
+      setArticles([]); 
+    }
+    setError(null);
 
-        if (query) {
-          params.q = query;
-        } else if (category && category !== 'general') {
-          params.category = category;
-        } else {
-          params.country = 'us';
-        }
+    try {
+      const endpoint = query ? 'everything' : 'top-headlines';
+      const params = {
+        apiKey: VITE_NEWS_API_KEY,
+        pageSize: PAGE_SIZE,
+        page: pageNum,
+      };
 
-        const res = await axios.get(`${VITE_NEWS_API_BASE_URL}/${endpoint}`, { params });
-        setArticles(res.data.articles);
-      } catch (err) {
-        console.error('Error fetching news:', err);
-        setError('Failed to load news. Please try again later.');
-      } finally {
-        setLoading(false);
+      if (query) {
+        params.q = query;
+      } else if (category && category !== 'general') {
+        params.category = category;
+      } else {
+        params.country = 'us';
       }
-    };
-    
-    fetchNews();
+
+      const res = await axios.get(`${VITE_NEWS_API_BASE_URL}/${endpoint}`, { params });
+      
+      if (!res.data.articles || res.data.articles.length === 0) {
+        setTotalResults(prevTotal => (isLoadingMore ? articles.length : 0));
+      } else {
+        setArticles(prev => isLoadingMore ? [...prev, ...res.data.articles] : res.data.articles);
+        setTotalResults(res.data.totalResults);
+      }
+      setPage(pageNum);
+
+    } catch (err) {
+      console.error('Error fetching news:', err);
+      setError('Failed to load news. Please try again later.');
+      if (isLoadingMore) {
+        setTotalResults(articles.length);
+      }
+    } finally {
+      if (isLoadingMore) {
+        setMoreLoading(false);
+      } else {
+        setInitialLoading(false);
+      }
+    }
+  }, [category, query, articles.length]); 
+
+  useEffect(() => {
+    setArticles([]);
+    setPage(1);
+    setTotalResults(0);
+    fetchNews(1);
   }, [category, query]);
 
-  return { articles, loading, error };
+  const fetchMore = () => {
+    if (articles.length < totalResults && !moreLoading) {
+      fetchNews(page + 1);
+    }
+  };
+
+  const hasMore = articles.length < totalResults;
+
+  return { articles, initialLoading, moreLoading, error, hasMore, fetchMore };
 }
 
 export default useNewsFetch;
