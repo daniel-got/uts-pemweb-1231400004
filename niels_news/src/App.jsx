@@ -5,6 +5,27 @@ import NewsList from './pages/NewsList.jsx';
 import NewsDetail from './pages/NewsDetail.jsx';
 
 function App() {
+  const [darkMode, setDarkMode] = useState(false);
+
+  const toggleDarkMode = () => {
+    setDarkMode(!darkMode);
+    document.documentElement.classList.toggle('dark');
+  };
+
+  return (
+    <div className={`min-h-screen ${darkMode ? 'dark' : ''}`}>
+      <Navbar toggleDarkMode={toggleDarkMode} darkMode={darkMode} />
+      
+      <main className="pt-20">
+        <Routes>
+          <Route path="/" element={<NewsList category="general" />} />
+          <Route path="/category/:category" element={<NewsList />} />
+          <Route path="/search" element={<NewsList />} />
+          <Route path="/article/:url" element={<NewsDetail />} />
+        </Routes>
+      </main>
+    </div>
+  );
 }
 
 export default App;
