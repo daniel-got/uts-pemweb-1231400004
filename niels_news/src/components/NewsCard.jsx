@@ -1,13 +1,12 @@
-
 import { Link } from 'react-router-dom';
 import { format } from 'date-fns';
 
 function NewsCard({ article }) {
   return (
     <Link 
-      to={`/article/${encodeURIComponent(article.url)}`} 
+      to={`/article?url=${encodeURIComponent(article.url)}`} 
       state={{ article }}
-      className="card group block" // card + block
+      className="card group block"
     >
       {article.urlToImage && (
         <div className="mb-4 overflow-hidden rounded-2xl border border-black">

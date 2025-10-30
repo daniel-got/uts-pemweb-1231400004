@@ -18,10 +18,10 @@ function App() {
       
       <main className="pt-20">
         <Routes>
-          <Route path="/" element={<NewsList category="general" />} />
+          <Route path="/" element={<NewsList />} />
           <Route path="/category/:category" element={<NewsList />} />
           <Route path="/search" element={<NewsList />} />
-          <Route path="/article/:url" element={<NewsDetail />} />
+          <Route path="/article" element={<NewsDetail />} />
         </Routes>
       </main>
     </div>
