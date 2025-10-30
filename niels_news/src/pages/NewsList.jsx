@@ -12,30 +12,21 @@ function NewsList() {
 
   const { articles, initialLoading, moreLoading, error, hasMore, fetchMore } = useNewsFetch(category, query);
 
-  const observer = useRef();
-  const lastArticleRef = useCallback(
-    (node) => {
-      if (initialLoading || moreLoading) return;
-      if (observer.current) observer.current.disconnect();
-
-      observer.current = new IntersectionObserver((entries) => {
-        if (entries[0].isIntersecting && hasMore) {
-          fetchMore();
-        }
-      });
-
-      if (node) observer.current.observe(node);
-    },
-    [initialLoading, moreLoading, hasMore, fetchMore]
-  );
-
   const getTitle = () => {
     if (query) return `Search: "${query}"`;
     if (category && category !== 'general') return `${category.charAt(0).toUpperCase() + category.slice(1)} News`;
     return 'Top Headlines';
   };
 
-  // Loading Awal
+  const handleLoadMore = (e) => {
+    e.currentTarget.blur();
+    
+    if (moreLoading) {
+      return;
+    }
+    fetchMore();
+  };
+
   if (initialLoading) {
     return (
       <div className="container mx-auto px-6 py-12">
@@ -72,30 +63,38 @@ function NewsList() {
 
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
           {articles.map((article, index) => (
-            <div
-              key={article.url}
-              ref={index === articles.length - 1 ? lastArticleRef : null} 
-            >
+            <div key={article.url}>
               <NewsCard article={article} />
             </div>
           ))}
+          
+          {moreLoading && (
+            <>
+              <NewsCardSkeleton key="more-skeleton-1" />
+              <NewsCardSkeleton key="more-skeleton-2" />
+              <NewsCardSkeleton key="more-skeleton-3" />
+            </>
+          )}
         </div>
-
-        {moreLoading && (
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8 mt-8">
-            {Array.from({ length: 3 }).map((_, i) => (
-              <NewsCardSkeleton key={`more-${i}`} />
-            ))}
-          </div>
-        )}
-
-        {!hasMore && articles.length > 0 && (
-          <p className="text-center mt-12 opacity-70">You've reached the end of the news.</p>
-        )}
 
         {error && !initialLoading && (
           <p className="text-center text-xl text-red-500 mt-8">{error}</p>
         )}
+
+        <div className="text-center mt-12">
+          {hasMore && (
+            <button
+              onClick={handleLoadMore}
+              className={`btn ${moreLoading ? 'opacity-70 cursor-not-allowed' : ''}`}
+            >
+              {moreLoading ? 'Loading...' : 'Load More News'}
+            </button>
+          )}
+          
+          {!hasMore && articles.length > 0 && (
+            <p className="text-center mt-12 opacity-70">You've reached the end of the news.</p>
+          )}
+        </div>
       </div>
     </div>
   );

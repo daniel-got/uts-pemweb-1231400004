@@ -3,6 +3,7 @@ import { Routes, Route } from 'react-router-dom';
 import Navbar from './components/Navbar.jsx';
 import NewsList from './pages/NewsList.jsx';
 import NewsDetail from './pages/NewsDetail.jsx';
+import Footer from './components/Footer.jsx';
 
 function App() {
   const [darkMode, setDarkMode] = useState(false);
@@ -24,6 +25,7 @@ function App() {
           <Route path="/article" element={<NewsDetail />} />
         </Routes>
       </main>
+    <Footer />
     </div>
   );
 }

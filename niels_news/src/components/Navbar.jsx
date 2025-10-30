@@ -1,5 +1,6 @@
 import { useState, useEffect } from 'react';
 import { Link, useNavigate, useSearchParams } from 'react-router-dom';
+import { SunIcon, MoonIcon } from '@heroicons/react/24/outline';
 
 function Navbar({ toggleDarkMode, darkMode }) {
   const [searchParams] = useSearchParams();
@@ -39,8 +40,12 @@ function Navbar({ toggleDarkMode, darkMode }) {
               Search
             </button>
           </form>
-          <button onClick={toggleDarkMode} className="ml-4 text-2xl">
-            {darkMode ? 'Sun' : 'Moon'}
+          <button onClick={toggleDarkMode} className="ml-4">
+            {darkMode ? (
+              <SunIcon className="h-6 w-6 text-yellow" />
+            ) : (
+              <MoonIcon className="h-6 w-6" />
+            )}
           </button>
         </div>
       </div>

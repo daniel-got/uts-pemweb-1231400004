@@ -42,7 +42,7 @@ function useNewsFetch(category, query) {
       const res = await axios.get(`${VITE_NEWS_API_BASE_URL}/${endpoint}`, { params });
       
       if (!res.data.articles || res.data.articles.length === 0) {
-        setTotalResults(prevTotal => (isLoadingMore ? articles.length : 0));
+        setTotalResults(prev => (isLoadingMore ? prev.length : 0));
       } else {
         setArticles(prev => isLoadingMore ? [...prev, ...res.data.articles] : res.data.articles);
         setTotalResults(res.data.totalResults);
@@ -53,7 +53,7 @@ function useNewsFetch(category, query) {
       console.error('Error fetching news:', err);
       setError('Failed to load news. Please try again later.');
       if (isLoadingMore) {
-        setTotalResults(articles.length);
+        setTotalResults(prev => prev.length);
       }
     } finally {
       if (isLoadingMore) {
@@ -62,14 +62,14 @@ function useNewsFetch(category, query) {
         setInitialLoading(false);
       }
     }
-  }, [category, query, articles.length]); 
+  }, [category, query]); 
 
   useEffect(() => {
     setArticles([]);
     setPage(1);
     setTotalResults(0);
     fetchNews(1);
-  }, [category, query]);
+  }, [category, query, fetchNews]);
 
   const fetchMore = () => {
     if (articles.length < totalResults && !moreLoading) {
