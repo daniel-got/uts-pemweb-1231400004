@@ -1,8 +1,8 @@
 import { useState, useEffect } from 'react';
 import { Link, useNavigate, useSearchParams } from 'react-router-dom';
-import { SunIcon, MoonIcon } from '@heroicons/react/24/outline';
+import { SunIcon, MoonIcon, Bars3Icon } from '@heroicons/react/24/outline';
 
-function Navbar({ toggleDarkMode, darkMode }) {
+function Navbar({ toggleDarkMode, darkMode, setSidebarOpen }) {
   const [searchParams] = useSearchParams();
   const [query, setQuery] = useState(searchParams.get('q') || '');
   const navigate = useNavigate();
@@ -21,10 +21,19 @@ function Navbar({ toggleDarkMode, darkMode }) {
   return (
     <nav className="sticky top-0 z-50 bg-white/90 dark:bg-dark/90 backdrop-blur-lg border-b-thick border-black">
       <div className="container mx-auto px-6 py-4 flex justify-between items-center">
-        <Link to="/" className="text-3xl font-bold font-display">
-          News<span className="text-yellow">Hub</span>
-        </Link>
-        <div className="flex items-center gap-6">
+        <div className="flex items-center gap-4">
+          <button
+            className="p-1 md:hidden"
+            onClick={() => setSidebarOpen(true)}
+          >
+            <Bars3Icon className="h-6 w-6" />
+          </button>
+          <Link to="/" className="text-3xl font-bold font-display">
+            News<span className="text-yellow">Hub</span>
+          </Link>
+        </div>
+
+        <div className="hidden md:flex items-center gap-6">
           {['Technology', 'Business', 'Sports'].map(cat => (
             <Link key={cat} to={`/category/${cat.toLowerCase()}`}
                   className="text-lg font-medium hover:text-yellow transition">

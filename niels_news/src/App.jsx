@@ -2,6 +2,7 @@ import { useState, useEffect, useRef } from 'react';
 import { Routes, Route } from 'react-router-dom';
 import Navbar from './components/Navbar.jsx';
 import SubNavbar from './components/SubNavbar.jsx';
+import  Sidebar from './components/Sidebar.jsx';
 import Home from "./pages/Home.jsx";
 import NewsList from './pages/NewsList.jsx';
 import NewsDetail from './pages/NewsDetail.jsx';
@@ -11,6 +12,7 @@ import Footer from './components/Footer.jsx';
 function App() {
   const [darkMode, setDarkMode] = useState(false);
   const [isSubNavVisible, setIsSubNavVisible] = useState(true);
+  const [sidebarOpen, setSidebarOpen] = useState(false);
   const lastScrollY = useRef(0);
   const toggleDarkMode = () => {
     setDarkMode(!darkMode);
@@ -38,7 +40,18 @@ function App() {
   }, []);
   return (
     <div className={`min-h-screen ${darkMode ? 'dark' : ''}`}>
-      <Navbar toggleDarkMode={toggleDarkMode} darkMode={darkMode} />
+      <Navbar 
+        toggleDarkMode={toggleDarkMode} 
+        darkMode={darkMode} 
+        setSidebarOpen={setSidebarOpen} 
+      />
+      
+      <Sidebar 
+        isOpen={sidebarOpen}
+        setIsOpen={setSidebarOpen}
+        darkMode={darkMode}
+        toggleDarkMode={toggleDarkMode}
+      />
       
       <div
         className={`sticky top-[71px] z-40 transition-all duration-300 ${
