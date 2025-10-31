@@ -1,8 +1,9 @@
 import { useState, useEffect } from 'react';
 import { Link, useNavigate, useSearchParams } from 'react-router-dom';
 import { SunIcon, MoonIcon, Bars3Icon } from '@heroicons/react/24/outline';
+import DatePicker from 'react-datepicker';
 
-function Navbar({ toggleDarkMode, darkMode, setSidebarOpen }) {
+function Navbar({ toggleDarkMode, darkMode, setSidebarOpen, selectedDate, setSelectedDate }) {
   const [searchParams] = useSearchParams();
   const [query, setQuery] = useState(searchParams.get('q') || '');
   const navigate = useNavigate();
@@ -16,6 +17,10 @@ function Navbar({ toggleDarkMode, darkMode, setSidebarOpen }) {
     if (query) {
       navigate(`/search?q=${query}`);
     }
+  };
+  const handleDateChange = (date) => {
+    setSelectedDate(date);
+    navigate('/');
   };
 
   return (
@@ -40,6 +45,7 @@ function Navbar({ toggleDarkMode, darkMode, setSidebarOpen }) {
               {cat}
             </Link>
           ))}
+
           <form onSubmit={handleSearch} className="flex">
             <input
               type="text" value={query} onChange={e => setQuery(e.target.value)}
@@ -49,6 +55,19 @@ function Navbar({ toggleDarkMode, darkMode, setSidebarOpen }) {
               Search
             </button>
           </form>
+
+          <div className="w-40">
+            <DatePicker
+              selected={selectedDate}
+              onChange={handleDateChange}
+              placeholderText="Select a date..."
+              className="w-full px-4 py-2 rounded-full border-thick border-black text-sm"
+              wrapperClassName="w-full"
+              isClearable
+              onClear={() => setSelectedDate(null)}
+            />
+          </div>
+
           <button onClick={toggleDarkMode} className="ml-4">
             {darkMode ? (
               <SunIcon className="h-6 w-6 text-yellow" />

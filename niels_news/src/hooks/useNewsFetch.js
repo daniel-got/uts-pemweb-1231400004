@@ -1,11 +1,12 @@
 import { useState, useEffect, useCallback } from 'react';
 import axios from 'axios';
+import { format } from 'date-fns';
 
 const VITE_NEWS_API_KEY = import.meta.env.VITE_NEWS_API_KEY;
 const VITE_NEWS_API_BASE_URL = import.meta.env.VITE_NEWS_API_BASE_URL;
 const PAGE_SIZE = 12;
 
-function useNewsFetch(category, query) {
+function useNewsFetch(category, query, selectedDate) {
   const [articles, setArticles] = useState([]);
   const [page, setPage] = useState(1);
   const [totalResults, setTotalResults] = useState(0);
@@ -24,14 +25,25 @@ function useNewsFetch(category, query) {
     setError(null);
 
     try {
-      const endpoint = query ? 'everything' : 'top-headlines';
+      const endpoint = (query || selectedDate) ? 'everything' : 'top-headlines';
       const params = {
         apiKey: VITE_NEWS_API_KEY,
         pageSize: PAGE_SIZE,
         page: pageNum,
       };
 
-      if (query) {
+      if (selectedDate) {
+        const formattedDate = format(selectedDate, 'yyyy-MM-dd');
+        params.from = formattedDate;
+        params.to = formattedDate;
+        if (query) {
+          params.q = query;
+        } else if (category && category !== 'general') {
+          params.q = category;
+        } else {
+          params.q = 'a'; 
+        }
+      } else if (query) {
         params.q = query;
       } else if (category && category !== 'general') {
         params.category = category;
@@ -62,14 +74,14 @@ function useNewsFetch(category, query) {
         setInitialLoading(false);
       }
     }
-  }, [category, query]); 
+  }, [category, query, selectedDate]); 
 
   useEffect(() => {
     setArticles([]);
     setPage(1);
     setTotalResults(0);
     fetchNews(1);
-  }, [category, query, fetchNews]);
+  }, [category, query, selectedDate, fetchNews]);
 
   const fetchMore = () => {
     if (articles.length < totalResults && !moreLoading) {

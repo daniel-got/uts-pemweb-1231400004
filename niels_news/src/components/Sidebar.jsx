@@ -1,8 +1,9 @@
 import { Link, useNavigate } from 'react-router-dom';
 import { useState } from 'react';
 import { XMarkIcon, SunIcon, MoonIcon } from '@heroicons/react/24/outline';
+import DatePicker from 'react-datepicker';
 
-function Sidebar({ isOpen, setIsOpen, darkMode, toggleDarkMode }) {
+function Sidebar({ isOpen, setIsOpen, darkMode, toggleDarkMode, selectedDate, setSelectedDate }) {
   const [query, setQuery] = useState('');
   const navigate = useNavigate();
 
@@ -16,6 +17,19 @@ function Sidebar({ isOpen, setIsOpen, darkMode, toggleDarkMode }) {
   };
 
   const handleLinkClick = () => {
+    setIsOpen(false);
+  };
+
+  const handleDateChange = (date) => {
+    setSelectedDate(date);
+    setIsOpen(false);
+    if(date) {
+      navigate('/');
+    }
+  };
+
+  const clearDate = () => {
+    setSelectedDate(null);
     setIsOpen(false);
   };
 
@@ -69,6 +83,20 @@ function Sidebar({ isOpen, setIsOpen, darkMode, toggleDarkMode }) {
               </Link>
             ))}
           </nav>
+          <div className="pt-6 border-t border-black/20 dark:border-white/20">
+            <h4 className="text-sm font-semibold mb-3">Filter by Date</h4>
+            <div className="w-full">
+              <DatePicker
+                selected={selectedDate}
+                onChange={handleDateChange}
+                placeholderText="Select a date..."
+                className="w-full px-4 py-2 rounded-full border-thick border-black"
+                wrapperClassName="w-full"
+                isClearable
+                onClear={() => setSelectedDate(null)}
+              />
+            </div>
+          </div>
 
           <button
             onClick={toggleDarkMode}

@@ -3,7 +3,7 @@ import { Routes, Route } from 'react-router-dom';
 import Navbar from './components/Navbar.jsx';
 import SubNavbar from './components/SubNavbar.jsx';
 import  Sidebar from './components/Sidebar.jsx';
-import Home from "./pages/Home.jsx";
+import HomePageLayout from './pages/HomePageLayout.jsx';
 import NewsList from './pages/NewsList.jsx';
 import NewsDetail from './pages/NewsDetail.jsx';
 import NotFound from "./pages/NotFound.jsx";
@@ -13,7 +13,9 @@ function App() {
   const [darkMode, setDarkMode] = useState(false);
   const [isSubNavVisible, setIsSubNavVisible] = useState(true);
   const [sidebarOpen, setSidebarOpen] = useState(false);
+  const [selectedDate, setSelectedDate] = useState(null);
   const lastScrollY = useRef(0);
+
   const toggleDarkMode = () => {
     setDarkMode(!darkMode);
     document.documentElement.classList.toggle('dark');
@@ -38,12 +40,15 @@ function App() {
       window.removeEventListener('scroll', handleScroll);
     };
   }, []);
+
   return (
     <div className={`min-h-screen ${darkMode ? 'dark' : ''}`}>
       <Navbar 
         toggleDarkMode={toggleDarkMode} 
         darkMode={darkMode} 
-        setSidebarOpen={setSidebarOpen} 
+        setSidebarOpen={setSidebarOpen}
+        selectedDate={selectedDate}
+        setSelectedDate={setSelectedDate}
       />
       
       <Sidebar 
@@ -51,6 +56,8 @@ function App() {
         setIsOpen={setSidebarOpen}
         darkMode={darkMode}
         toggleDarkMode={toggleDarkMode}
+        selectedDate={selectedDate}
+        setSelectedDate={setSelectedDate}
       />
       
       <div
@@ -63,9 +70,9 @@ function App() {
       
       <main className="pt-20">
         <Routes>
-          <Route path="/" element={<Home />} />
-          <Route path="/category/:category" element={<NewsList />} />
-          <Route path="/search" element={<NewsList />} />
+          <Route path="/" element={<HomePageLayout selectedDate={selectedDate} />} />
+          <Route path="/category/:category" element={<NewsList selectedDate={selectedDate} />} />
+          <Route path="/search" element={<NewsList selectedDate={selectedDate} />} />
           <Route path="/article" element={<NewsDetail />} />
           <Route path="*" element={<NotFound />} />
         </Routes>

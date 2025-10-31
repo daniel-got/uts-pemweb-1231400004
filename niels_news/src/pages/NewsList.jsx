@@ -1,19 +1,21 @@
 import { useState, useEffect, useRef, useCallback } from 'react';
 import { useParams, useSearchParams } from 'react-router-dom';
+import { format } from 'date-fns';
 import NewsCard from '../components/NewsCard';
 import NewsCardSkeleton from '../components/NewsCardSkeleton';
 import useNewsFetch from '../hooks/useNewsFetch';
 
-function NewsList() {
+function NewsList({selectedDate}) {
   const { category: categoryParam } = useParams();
   const [searchParams] = useSearchParams();
   const query = searchParams.get('q');
   const category = categoryParam || (query ? null : 'general');
 
-  const { articles, initialLoading, moreLoading, error, hasMore, fetchMore } = useNewsFetch(category, query);
+  const { articles, initialLoading, moreLoading, error, hasMore, fetchMore } = useNewsFetch(category, query, selectedDate);
 
   const getTitle = () => {
     if (query) return `Search: "${query}"`;
+    if (selectedDate) return `News for ${format(selectedDate, 'PPP')}`;
     if (category && category !== 'general') return `${category.charAt(0).toUpperCase() + category.slice(1)} News`;
     return 'Top Headlines';
   };
