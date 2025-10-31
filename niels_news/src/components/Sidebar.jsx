@@ -3,7 +3,14 @@ import { useState } from 'react';
 import { XMarkIcon, SunIcon, MoonIcon } from '@heroicons/react/24/outline';
 import DatePicker from 'react-datepicker';
 
-function Sidebar({ isOpen, setIsOpen, darkMode, toggleDarkMode, selectedDate, setSelectedDate }) {
+function Sidebar({ 
+  isOpen, 
+  setIsOpen, 
+  darkMode, 
+  toggleDarkMode,
+  selectedDate,
+  setSelectedDate
+}) {
   const [query, setQuery] = useState('');
   const navigate = useNavigate();
 
@@ -19,13 +26,10 @@ function Sidebar({ isOpen, setIsOpen, darkMode, toggleDarkMode, selectedDate, se
   const handleLinkClick = () => {
     setIsOpen(false);
   };
-
+  
   const handleDateChange = (date) => {
     setSelectedDate(date);
     setIsOpen(false);
-    if(date) {
-      navigate('/');
-    }
   };
 
   const clearDate = () => {
@@ -83,6 +87,7 @@ function Sidebar({ isOpen, setIsOpen, darkMode, toggleDarkMode, selectedDate, se
               </Link>
             ))}
           </nav>
+          
           <div className="pt-6 border-t border-black/20 dark:border-white/20">
             <h4 className="text-sm font-semibold mb-3">Filter by Date</h4>
             <div className="w-full">
@@ -100,8 +105,9 @@ function Sidebar({ isOpen, setIsOpen, darkMode, toggleDarkMode, selectedDate, se
 
           <button
             onClick={toggleDarkMode}
-            className="flex items-center justify-between w-full p-3 bg-gray dark:bg-black/20 rounded-lg"
+            className="flex items-center justify-between w-full text-lg font-medium p-3 bg-gray dark:bg-black/20 rounded-lg"
           >
+            <span>Toggle Theme</span>
             {darkMode ? (
               <SunIcon className="h-6 w-6 text-yellow" />
             ) : (

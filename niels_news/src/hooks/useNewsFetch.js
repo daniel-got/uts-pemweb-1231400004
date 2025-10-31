@@ -26,6 +26,7 @@ function useNewsFetch(category, query, selectedDate) {
 
     try {
       const endpoint = (query || selectedDate) ? 'everything' : 'top-headlines';
+      
       const params = {
         apiKey: VITE_NEWS_API_KEY,
         pageSize: PAGE_SIZE,
@@ -36,12 +37,13 @@ function useNewsFetch(category, query, selectedDate) {
         const formattedDate = format(selectedDate, 'yyyy-MM-dd');
         params.from = formattedDate;
         params.to = formattedDate;
+        
         if (query) {
           params.q = query;
         } else if (category && category !== 'general') {
           params.q = category;
         } else {
-          params.q = 'a'; 
+          params.q = 'latest'; 
         }
       } else if (query) {
         params.q = query;

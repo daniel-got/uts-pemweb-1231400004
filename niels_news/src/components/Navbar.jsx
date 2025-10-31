@@ -18,9 +18,9 @@ function Navbar({ toggleDarkMode, darkMode, setSidebarOpen, selectedDate, setSel
       navigate(`/search?q=${query}`);
     }
   };
+
   const handleDateChange = (date) => {
     setSelectedDate(date);
-    navigate('/');
   };
 
   return (
@@ -45,7 +45,6 @@ function Navbar({ toggleDarkMode, darkMode, setSidebarOpen, selectedDate, setSel
               {cat}
             </Link>
           ))}
-
           <form onSubmit={handleSearch} className="flex">
             <input
               type="text" value={query} onChange={e => setQuery(e.target.value)}
@@ -55,7 +54,7 @@ function Navbar({ toggleDarkMode, darkMode, setSidebarOpen, selectedDate, setSel
               Search
             </button>
           </form>
-
+          
           <div className="w-40">
             <DatePicker
               selected={selectedDate}
