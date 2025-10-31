@@ -4,6 +4,7 @@ import Navbar from './components/Navbar.jsx';
 import Home from "./pages/Home.jsx";
 import NewsList from './pages/NewsList.jsx';
 import NewsDetail from './pages/NewsDetail.jsx';
+import NotFound from "./pages/NotFound.jsx";
 import Footer from './components/Footer.jsx';
 
 function App() {
@@ -24,6 +25,7 @@ function App() {
           <Route path="/category/:category" element={<NewsList />} />
           <Route path="/search" element={<NewsList />} />
           <Route path="/article" element={<NewsDetail />} />
+          <Route path="*" element={<NotFound />} />
         </Routes>
       </main>
     <Footer />

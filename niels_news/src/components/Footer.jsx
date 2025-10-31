@@ -11,7 +11,7 @@ function Footer() {
               News<span className="text-yellow">Hub</span>
             </Link>
             <p className="mt-4 opacity-80 text-sm">
-              Your modern news portal. Built with React & Vite.
+              News Portal For Anyone, Get Your Information From Here.
             </p>
           </div>
           <div>
