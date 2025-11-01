@@ -12,10 +12,13 @@ function CategoryRow({ category }) {
     const fetchCategory = async () => {
       setLoading(true);
       try {
-        const res = await axios.get(`${import.meta.env.VITE_NEWS_API_BASE_URL}/top-headlines`, {
-          params: { apiKey: import.meta.env.VITE_NEWS_API_KEY, category: category.slug, pageSize: 4, country: 'us' }
-        });
-        setArticles(res.data.articles);
+        const res = await axios.get('/mockdata.json');
+        
+        const filtered = res.data.articles.filter(art => 
+          (art.title && art.title.toLowerCase().includes(category.slug.toLowerCase())) ||
+          (art.description && art.description.toLowerCase().includes(category.slug.toLowerCase()))
+        );
+        setArticles(filtered.slice(0, 4));
       } catch (err) {
         console.error(err);
       } finally {
@@ -42,9 +45,13 @@ function CategoryRow({ category }) {
         </div>
       ) : (
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
-          {articles.map((article, i) => (
-            <NewsCard key={i} article={article} />
-          ))}
+          {articles.length > 0 ? (
+             articles.map((article, i) => (
+              <NewsCard key={i} article={article} />
+            ))
+          ) : (
+            <p className="opacity-70 col-span-4">No articles found in mock data for this category.</p>
+          )}
         </div>
       )}
     </section>

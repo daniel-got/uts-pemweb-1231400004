@@ -2,96 +2,79 @@ import { useState, useEffect, useCallback } from 'react';
 import axios from 'axios';
 import { format } from 'date-fns';
 
-const VITE_NEWS_API_KEY = import.meta.env.VITE_NEWS_API_KEY;
-const VITE_NEWS_API_BASE_URL = import.meta.env.VITE_NEWS_API_BASE_URL;
 const PAGE_SIZE = 12;
+let allArticlesCache = []; 
 
 function useNewsFetch(category, query, selectedDate) {
   const [articles, setArticles] = useState([]);
   const [page, setPage] = useState(1);
-  const [totalResults, setTotalResults] = useState(0);
+  const [filteredArticles, setFilteredArticles] = useState([]);
   const [initialLoading, setInitialLoading] = useState(true);
   const [moreLoading, setMoreLoading] = useState(false);
   const [error, setError] = useState(null);
 
-  const fetchNews = useCallback(async (pageNum) => {
-    const isLoadingMore = pageNum > 1;
-    if (isLoadingMore) {
-      setMoreLoading(true);
-    } else {
-      setInitialLoading(true);
-      setArticles([]); 
-    }
-    setError(null);
-
-    try {
-      const endpoint = (query || selectedDate) ? 'everything' : 'top-headlines';
-      
-      const params = {
-        apiKey: VITE_NEWS_API_KEY,
-        pageSize: PAGE_SIZE,
-        page: pageNum,
-      };
-
-      if (selectedDate) {
-        const formattedDate = format(selectedDate, 'yyyy-MM-dd');
-        params.from = formattedDate;
-        params.to = formattedDate;
-        
-        if (query) {
-          params.q = query;
-        } else if (category && category !== 'general') {
-          params.q = category;
-        } else {
-          params.q = 'latest'; 
-        }
-      } else if (query) {
-        params.q = query;
-      } else if (category && category !== 'general') {
-        params.category = category;
-      } else {
-        params.country = 'us';
+  useEffect(() => {
+    const fetchAllNews = async () => {
+      if (allArticlesCache.length > 0) {
+        return; 
       }
-
-      const res = await axios.get(`${VITE_NEWS_API_BASE_URL}/${endpoint}`, { params });
-      
-      if (!res.data.articles || res.data.articles.length === 0) {
-        setTotalResults(prev => (isLoadingMore ? prev.length : 0));
-      } else {
-        setArticles(prev => isLoadingMore ? [...prev, ...res.data.articles] : res.data.articles);
-        setTotalResults(res.data.totalResults);
+      try {
+        const res = await axios.get('/mockdata.json'); 
+        allArticlesCache = res.data.articles || [];
+      } catch (err) {
+        console.error('Error fetching mock data:', err);
+        setError('Failed to load mock data. Check public/mockdata.json.');
       }
-      setPage(pageNum);
-
-    } catch (err) {
-      console.error('Error fetching news:', err);
-      setError('Failed to load news. Please try again later.');
-      if (isLoadingMore) {
-        setTotalResults(prev => prev.length);
-      }
-    } finally {
-      if (isLoadingMore) {
-        setMoreLoading(false);
-      } else {
-        setInitialLoading(false);
-      }
-    }
-  }, [category, query, selectedDate]); 
+    };
+    fetchAllNews();
+  }, []);
 
   useEffect(() => {
-    setArticles([]);
-    setPage(1);
-    setTotalResults(0);
-    fetchNews(1);
-  }, [category, query, selectedDate, fetchNews]);
+    setInitialLoading(true);
+
+    let data = [...allArticlesCache];
+
+    if (selectedDate) {
+      const formattedDate = format(selectedDate, 'yyyy-MM-dd');
+      data = data.filter(art => art.publishedAt && art.publishedAt.startsWith(formattedDate));
+    }
+
+    if (query) {
+      data = data.filter(art => 
+        (art.title && art.title.toLowerCase().includes(query.toLowerCase())) ||
+        (art.description && art.description.toLowerCase().includes(query.toLowerCase()))
+      );
+    }
+    
+    if (category && category !== 'general' && !query) {
+      data = data.filter(art => 
+        (art.title && art.title.toLowerCase().includes(category.toLowerCase())) ||
+        (art.description && art.description.toLowerCase().includes(category.toLowerCase()))
+      );
+    }
+
+    setFilteredArticles(data);
+    setPage(1); 
+    setArticles(data.slice(0, PAGE_SIZE)); 
+    setInitialLoading(false);
+    
+  }, [category, query, selectedDate]);
 
   const fetchMore = () => {
-    if (articles.length < totalResults && !moreLoading) {
-      fetchNews(page + 1);
-    }
+    if (articles.length >= filteredArticles.length) return;
+
+    setMoreLoading(true);
+    
+    setTimeout(() => {
+      const newPage = page + 1;
+      const newArticles = filteredArticles.slice(articles.length, newPage * PAGE_SIZE);
+      setArticles(prev => [...prev, ...newArticles]);
+      setPage(newPage);
+      setMoreLoading(false);
+    }, 500); 
   };
 
-  const hasMore = articles.length < totalResults;
+  const hasMore = articles.length < filteredArticles.length;
 
   return { articles, initialLoading, moreLoading, error, hasMore, fetchMore };
 }

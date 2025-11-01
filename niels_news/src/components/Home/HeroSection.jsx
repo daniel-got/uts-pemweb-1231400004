@@ -34,10 +34,8 @@ function HeroSection() {
     const fetchHero = async () => {
       setHeroLoading(true);
       try {
-        const res = await axios.get(`${import.meta.env.VITE_NEWS_API_BASE_URL}/top-headlines`, {
-          params: { apiKey: import.meta.env.VITE_NEWS_API_KEY, country: 'us', pageSize: 4 }
-        });
-        setHeroNews(res.data.articles);
+        const res = await axios.get('/mockdata.json');
+        setHeroNews(res.data.articles.slice(0, 4));
       } catch (err) {
         console.error(err);
       } finally {
