@@ -26,11 +26,11 @@ Proyek ini mengimplementasikan berbagai fitur web modern, termasuk *client-side 
 
 | Tampilan Desktop (Home) | Tampilan Desktop (Filter) |
 | :---: | :---: |
-| ![NewsHub Desktop](./public/screenshots/desktop-home.png) | ![NewsHub Desktop Filter](./public/screenshots/desktop-filter.png) |
+| ![NewsHub Desktop](./public/screenshot/desktop-home.png) | ![NewsHub Desktop Filter](./public/screenshot/desktop-filter.png) |
 
 | Tampilan Mobile (Sidebar) | Tampilan Mobile (Dark Mode) |
 | :---: | :---: |
-| ![NewsHub Mobile](./public/screenshots/mobile-sidebar.png) | ![NewsHub Mobile Dark](./public/screenshots/mobile-dark.png) |
+| ![NewsHub Mobile](./public/screenshot/mobile-sidebar.png) | ![NewsHub Mobile Dark](./public/screenshot/mobile-dark.png) |
 
 
 ## Teknologi yang Digunakan
