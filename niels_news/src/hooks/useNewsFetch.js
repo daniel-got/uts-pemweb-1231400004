@@ -3,7 +3,6 @@ import axios from 'axios';
 import { format } from 'date-fns';
 
 const VITE_NEWS_API_KEY = import.meta.env.VITE_NEWS_API_KEY;
-const VITE_NEWS_API_BASE_URL = import.meta.env.VITE_NEWS_API_BASE_URL;
 const PAGE_SIZE = 12;
 
 function useNewsFetch(category, query, selectedDate) {
@@ -53,7 +52,7 @@ function useNewsFetch(category, query, selectedDate) {
         params.country = 'us';
       }
 
-      const res = await axios.get(`${VITE_NEWS_API_BASE_URL}/${endpoint}`, { params });
+      const res = await axios.get(`/api/news/${endpoint}`, { params });
       
       if (!res.data.articles || res.data.articles.length === 0) {
         setTotalResults(prev => (isLoadingMore ? prev.length : 0));

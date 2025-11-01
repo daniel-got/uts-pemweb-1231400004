@@ -1,0 +1,58 @@
+{
+	"status": "ok",
+	"totalResults": 48,
+	"articles": [
+		{
+			"source": {
+				"id": null,
+				"name": "Geekspin.co"
+			},
+			"author": "Stefan Milovanovic",
+			"title": "Human DNA detected in 2 billion year old meteorite - Yahoo",
+			"description": "This statement might sound like a line from a sci-fi movie, but what if life on Earth didn’t start here at all? For decades, that question sat on the fringe ...",
+			"url": "https://geekspin.co/human-dna-detected-2-billion-year-old-meteorite/",
+			"urlToImage": "https://media.zenfs.com/en/geekspin_390/3ae1151d8a73479e19e127ffc9b3cf70",
+			"publishedAt": "2025-10-30T21:15:20Z",
+			"content": "This statement might sound like a line from a sci-fi movie, but what if life on Earth didnt start here at all?\r\nFor decades, that question sat on the fringe of science, it was filed next to crop circ… [+4669 chars]"
+		},
+		{
+			"source": {
+				"id": "cnn",
+				"name": "CNN"
+			},
+			"author": "Ashley Strickland",
+			"title": "Interstellar comet 3I/ATLAS just made its closest pass of the sun. Discover where it’s going next - CNN",
+			"description": "An interstellar comet that originated outside our solar system just flew by the sun. Next, the object will fly by Earth in December.",
+			"url": "https://www.cnn.com/2025/10/30/science/interstellar-comet-3i-atlas-sun",
+			"urlToImage": "https://media.cnn.com/api/v1/images/stellar/prod/stsci-01k1x6xdr76zd4fyj9vtwn1erb.jpg?c=16x9&q=w_800,c_fill",
+			"publishedAt": "2025-10-30T20:20:07Z",
+			"content": "An interstellar comet that originated outside our solar system just made its closest pass of the sun, setting it on an outgoing path but its not leaving our cosmic neighborhood yet.\r\nThe comet, dubbe… [+4545 chars]"
+		},
+		{
+			"source": {
+				"id": null,
+				"name": "Nature.com"
+			},
+			"author": null,
+			"title": "Nanotyrannus and Tyrannosaurus coexisted at the close of the Cretaceous - Nature",
+			"description": "Nature - Nanotyrannus and Tyrannosaurus coexisted at the close of the Cretaceous",
+			"url": "https://www.nature.com/articles/s41586-025-09801-6",
+			"urlToImage": null,
+			"publishedAt": "2025-10-30T18:14:50Z",
+			"content": "Tyrannosaurus rex ranks among the most comprehensively studied extinct vertebrates1 and a model system for dinosaur paleobiology1. As one of the last surviving non-avian dinosaurs, Tyrannosaurus is a… [+1633 chars]"
+		},
+		{
+			"source": {
+				"id": null,
+				"name": "Phys.Org"
+			},
+			"author": "Patty Wellborn",
+			"title": "Mathematical proof debunks the idea that the universe is a computer simulation - Phys.org",
+			"description": "It's a plot device beloved by science fiction: our entire universe might be a simulation running on some advanced civilization's supercomputer. But new research from UBC Okanagan has mathematically proven this isn't just unlikely—it's impossible.",
+			"url": "https://phys.org/news/2025-10-mathematical-proof-debunks-idea-universe.html",
+			"urlToImage": "https://scx2.b-cdn.net/gfx/news/hires/2025/computer-simulations-l.jpg",
+			"publishedAt": "2025-10-30T16:22:32Z",
+			"content": "It's a plot device beloved by science fiction: our entire universe might be a simulation running on some advanced civilization's supercomputer. But new research from UBC Okanagan has mathematically p… [+5948 chars]"
+		}
+	]
+}
