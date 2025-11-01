@@ -75,4 +75,5 @@ Proyek ini mengimplementasikan berbagai fitur web modern, termasuk *client-side 
 ## Link Deployment
 
 Aplikasi ini telah di-*deploy* menggunakan Vercel.
-newshub.vercel.app
+https://newshub-ecru-beta.vercel.app/
+namun untuk data yang ditampilkan tidak ada, dikarenakan newsapi tidak mengizinkan untuk menampilkan data pada Production hanya pada development.
