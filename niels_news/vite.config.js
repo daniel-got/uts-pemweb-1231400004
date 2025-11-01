@@ -5,15 +5,7 @@ export default defineConfig({
   plugins: [react()],
   server: {
     port: 5173,
-    open: true,
-    //using proxy to get data
-    proxy: {
-      '/api/news': {
-        target: 'https://newsapi.org/v2',
-        changeOrigin: true,
-        rewrite: (path) => path.replace(/^\/api\/news/, ''),
-      },
-    }
+    open: true
   },
   build: {
     outDir: 'dist',
