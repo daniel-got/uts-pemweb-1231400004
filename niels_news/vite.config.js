@@ -6,6 +6,7 @@ export default defineConfig({
   server: {
     port: 5173,
     open: true,
+    //using proxy to get data
     proxy: {
       '/api/news': {
         target: 'https://newsapi.org/v2',
